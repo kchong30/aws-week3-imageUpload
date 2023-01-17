@@ -15,8 +15,11 @@
     <button type="submit" name="submit">UPLOAD</button>
   </form>
 
-  <img src="/images/66d3ff6f7ed916d3896459b43557c705">
+  <% images.forEach(image => { %>
+    <li style = "list-style:none">
+      <img src="<%= image.file_path %>">
+    </li>
+<% }) %>
 
-  
 </body>
 </html>
