@@ -8,18 +8,23 @@
 </head>
 <body>
 
-  <!-- create a form to upload an image jpeg with a description -->
-  <form action="/saveImage" method="post" enctype="multipart/form-data">
-    <input type="file" name="image" accept="image/*">
-    <input type="text" name="description" placeholder="Description">
-    <button type="submit" name="submit">UPLOAD</button>
-  </form>
+  <h1 style="text-align:center; ">Image Uploader 3000</h1>
+
+  <div style ="display:flex; justify-content:center; margin: 30px">
+    <!-- create a form to upload an image jpeg with a description -->
+    <form action="/saveImage" method="post" enctype="multipart/form-data">
+      <input type="file" name="image" accept="image/*">
+      <input type="text" name="description" placeholder="Description">
+      <button type="submit" name="submit">UPLOAD</button>
+    </form>
+  </div>
 
   <% images.forEach(image => { %>
     <li style = "list-style:none">
-      <img src="<%= image.file_path %>">
+      <img src="<%= image.file_path %>" style = "margin: 10px">
     </li>
-<% }) %>
+  <% }) %>
+
 
 </body>
 </html>
