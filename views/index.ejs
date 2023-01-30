@@ -21,7 +21,8 @@
 
   <% images.forEach(image => { %>
     <li style = "list-style:none; display:grid; justify-content:center;">
-      <img src="<%= image.file_path %>" style = "margin: 10px">
+      <img src="<%= image.imageURL %>" alt="<%= image.description %>" style = "margin: 10px" />
+      <p style = "text-align:center;"><%= image.description %></p>
     </li>
   <% }) %>
 
