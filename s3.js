@@ -1,4 +1,4 @@
-const { S3Client, PutObjectCommand, GetObjectCommand } =  require('@aws-sdk/client-s3')
+const { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } =  require('@aws-sdk/client-s3')
 const presigner = require('@aws-sdk/s3-request-presigner')
 
 
@@ -35,6 +35,18 @@ async function uploadImage(imageBuffer, imageName, mimetype) {
   return data
 }
 exports.uploadImage = uploadImage;
+
+async function deleteImage(imageName) {
+  const params = {
+    Bucket: bucketName,
+    Key: imageName
+  }
+  const command = new DeleteObjectCommand(params)
+  const data = await s3Client.send(command)
+  
+  return data;
+}
+exports.deleteImage = deleteImage;
 
 async function getSignedUrl(fileName) {
   const command = new GetObjectCommand({

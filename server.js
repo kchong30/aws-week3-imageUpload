@@ -4,8 +4,10 @@ const multer = require('multer')
 const storage = multer.memoryStorage()
 const upload = multer({ storage: storage })
 const database = require('./database');
+const sharp = require("sharp");
 const crypto = require ('crypto');
 const s3 = require('./s3.js');
+
 
 const generateFileName = (bytes = 32) => crypto.randomBytes(bytes).toString('hex')
 
@@ -36,7 +38,10 @@ app.post('/saveImage', upload.single('image'), async(req, res) => {
     res.render('savedImage', {description, imagePath}) */
       // Get the data from the post request
   const description = req.body.description
-  const fileBuffer = req.file.buffer
+  const fileBuffer = await sharp(req.file.buffer)
+  .resize({ height: 280, width: 280, fit: "contain" })
+  .greyscale()
+  .toBuffer()
   const mimetype = req.file.mimetype
   const fileName = generateFileName()
 
@@ -46,7 +51,7 @@ app.post('/saveImage', upload.single('image'), async(req, res) => {
   // Store the image in the database
   const databaseResult = await database.addImage(fileName, description)
 
-  res.status(201).send(databaseResult)
+  res.render("savedImage", {description});
 })
 
 app.get('/image/:id'), (req,res) => {
@@ -64,4 +69,13 @@ app.get('/images/:imageName', (req, res) => {
     readStream.pipe(res)
   })
 
+app.post('/image/delete/:id/:file_path', async(req, res) => {
+
+  const id = req.params.id
+  const imageName = req.params.file_path
+
+  database.deleteImage(id)
+  const s3Result = await s3.deleteImage(imageName)
+  res.redirect("/");
+})
 app.listen(8080, () => console.log("listening on port 8080"))
